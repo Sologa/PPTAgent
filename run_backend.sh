@@ -7,6 +7,16 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$SCRIPT_DIR"
+
+# Source .env file if it exists in the repo root
+if [ -f "$REPO_ROOT/.env" ]; then
+  echo "[run_backend] Sourcing .env file"
+  set -o allexport
+  # shellcheck disable=SC1090
+  source "$REPO_ROOT/.env"
+  set +o allexport
+fi
+
 # If the user has environment variables (e.g., OPENAI_API_KEY) in their shell
 # rc, source it first so those vars are available to the helper process.
 if [ -f "$HOME/.zshrc" ]; then

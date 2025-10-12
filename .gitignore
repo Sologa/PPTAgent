@@ -52,3 +52,6 @@ mineru_response.zip
 
 # Ignore generated output directory
 output/
+
+# Ignore environment files
+.env
