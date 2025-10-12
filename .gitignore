@@ -11,6 +11,9 @@ oaib.txt
 *egg-info
 .yarn
 runs
+pptagent/runs/
+pptagent/runs*
+*.pptx
 Makefile
 node_modules
 human_eval
@@ -42,3 +45,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Ignore large binary files
+docs/pptagent.pdf
+mineru_response.zip
+
+# Ignore generated output directory
+output/

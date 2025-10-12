@@ -75,6 +75,8 @@ class ModelManager:
 
         self.language_model = AsyncLLM(language_model_name, api_base)
         self.vision_model = AsyncLLM(vision_model_name, api_base)
+        # Placeholder for backward compatibility with older backend references.
+        self.marker_model = None
 
     @property
     def image_model(self):
@@ -136,16 +138,19 @@ def get_image_model(device: str = None):
     )
 
 
-async def parse_pdf(pdf_path: str, output_folder: str):
+async def parse_pdf(
+    pdf_path: str, output_folder: str, marker_model: object | None = None
+) -> str:
     """
     Parse a PDF file and extract text and images.
 
     Args:
         pdf_path (str): The path to the PDF file.
         output_path (str): The root directory to save the extracted content.
+        marker_model: Reserved for backward compatibility; not used.
 
     Returns:
-        str: The path to the extracted folder
+        str: The extracted markdown content if available, otherwise an empty string.
     """
     assert MINERU_API is not None, "MINERU_API is not set"
     os.makedirs(output_folder, exist_ok=True)
@@ -190,6 +195,12 @@ async def parse_pdf(pdf_path: str, output_folder: str):
                         os.makedirs(os.path.dirname(dest_path), exist_ok=True)
                         with zip_ref.open(member) as src, open(dest_path, "wb") as dst:
                             dst.write(src.read())
+
+    markdown_path = os.path.join(output_folder, "source.md")
+    if os.path.exists(markdown_path):
+        with open(markdown_path, encoding="utf-8") as md_file:
+            return md_file.read()
+    return ""
 
 
 def get_image_embedding(

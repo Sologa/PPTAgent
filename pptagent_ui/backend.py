@@ -274,16 +274,15 @@ async def ppt_gen(task_id: str, rerun=False):
         await progress.report_progress()
 
         # pdf parsing
-        if not os.path.exists(join(parsedpdf_dir, "source.md")):
-            text_content = parse_pdf(
+        source_md_path = join(parsedpdf_dir, "source.md")
+        if not os.path.exists(source_md_path):
+            text_content = await parse_pdf(
                 join(RUNS_DIR, "pdf", pdf_md5, "source.pdf"),
                 parsedpdf_dir,
                 models.marker_model,
             )
         else:
-            text_content = open(
-                join(parsedpdf_dir, "source.md"), encoding="utf-8"
-            ).read()
+            text_content = open(source_md_path, encoding="utf-8").read()
         await progress.report_progress()
 
         # document refine

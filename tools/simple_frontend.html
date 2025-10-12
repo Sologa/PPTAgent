@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simple PPTAgent Upload</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 40px; }
+      .box { max-width: 700px; }
+      input[type=file] { display:block; margin-bottom:10px }
+      pre { background:#f6f6f6; padding:10px }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <h2>Simple PPTAgent Upload</h2>
+      <form id="uploadForm">
+        <label>PDF file:</label>
+        <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" />
+        <label>Number of slides (hint):</label>
+        <input type="number" id="numberOfPages" name="numberOfPages" value="10" />
+        <button type="submit">Upload & Parse</button>
+      </form>
+
+      <h3>Result</h3>
+      <pre id="result">No action yet</pre>
+
+      <script>
+        const form = document.getElementById('uploadForm');
+        const result = document.getElementById('result');
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const fileInput = document.getElementById('pdfFile');
+          if (!fileInput.files.length) { alert('Choose a PDF first'); return; }
+          const f = fileInput.files[0];
+          const pages = document.getElementById('numberOfPages').value || 10;
+          const fd = new FormData();
+          fd.append('pdfFile', f);
+          fd.append('numberOfPages', pages);
+          result.textContent = 'Uploading...';
+          try {
+            const resp = await fetch('/api/upload', { method: 'POST', body: fd });
+            const j = await resp.json();
+            result.textContent = JSON.stringify(j, null, 2);
+          } catch (err) {
+            result.textContent = 'Error: ' + err;
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>
