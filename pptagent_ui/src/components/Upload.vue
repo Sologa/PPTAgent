@@ -43,7 +43,7 @@ export default {
       pptxFile: null,
       pdfFile: null,
       selectedPages: 6,
-      pagesOptions: Array.from({ length: 12 }, (_, i) => i + 3),
+      pagesOptions: Array.from({ length: 28 }, (_, i) => i + 3),
       isPptxEnabled:true
     }
   },
