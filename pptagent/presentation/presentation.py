@@ -315,8 +315,8 @@ class Presentation:
 
         for slide in prs.slides:
             # Skip slides that won't be printed to PDF, as they are invisible
-            if slide._element.get("show", 1) == "0":
-                continue
+            # if slide._element.get("show", 1) == "0":
+            #     continue
 
             slide_idx += 1
             try:

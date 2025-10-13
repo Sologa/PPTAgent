@@ -234,9 +234,17 @@ async def ppt_gen(task_id: str, rerun=False):
         presentation = Presentation.from_file(
             join(pptx_config.RUN_DIR, "source.pptx"), pptx_config
         )
+        # If the slide images don't exist or don't match the presentation slide count, regenerate them.
         if not os.path.exists(ppt_image_folder) or len(
             os.listdir(ppt_image_folder)
         ) != len(presentation):
+            # Ensure the target directory is clean before generating new images
+            # to prevent errors from stale files from previous runs.
+            if os.path.exists(ppt_image_folder):
+                import shutil
+                shutil.rmtree(ppt_image_folder)
+
+            # Call the original, asynchronous conversion function.
             await ppt_to_images_async(
                 join(pptx_config.RUN_DIR, "source.pptx"), ppt_image_folder
             )
